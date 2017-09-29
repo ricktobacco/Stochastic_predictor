@@ -30,7 +30,7 @@ class Agent():
 		self.output_size = output_size
 		self.learning_rate = LEARNING_RATE
 		self.model = self._build_model()
-		self.memory = './ticker_tape.csv'
+		self.memory = "ticker_tape.csv"
 		self.target_model = self._build_model()
 		self.update_target_model()
 		self.gamma = 0.95
@@ -52,9 +52,15 @@ class Agent():
 	def learn(self):
 		seed = 9
 		np.random.seed(seed)
+		dataset = np.loadtxt("ticker_tape.csv", delimiter=',')
+		print dataset
+#		print dataset[:]
+		X = dataset[:,0:3]
+		Y = dataset[:,3:]
+#		sys.exit(1)
 #		minibatch = random.sample(self.memory, batch_size)
-		print self.memory
-		for inputs, results in self.memory:
+#		print self.memory
+#		for inputs, results in self.memory:
 #			print "this", this			
 #			if done:
 #				target[0][action] = reward
@@ -68,9 +74,9 @@ class Agent():
 #			print results
 #			Y = np.array([results])
 #			print Y
-			pass
+#			pass
 		print X		
-#		print Y = self.memory[0]
+		print Y
 		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
 		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=200, batch_size=5, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
