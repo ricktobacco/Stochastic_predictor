@@ -19,7 +19,7 @@ import numpy as np
 
 # api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 6
+EPOCHS = 10
 BATCH = 32
 
 # defining a params dict for the parameters to be sent to the API
@@ -45,23 +45,29 @@ def pull():
 	X = []
 	for each, coin in tape.items():
 		X.append(coin)
-	return list(X)
+#	print X
+	return X
 
 def run(args):
 	agent = objects.Agent(3, 3)
 	while True:
 		for i in range(EPOCHS):
-			X = np.array(pull()).reshape((1, 3))
+			X = pull()
+			T = np.array([X])
 #			print X
-			P = agent.model.predict(X)
-        		time.sleep(10)
-			R = np.array(pull()).reshape((1, 3))
+			P = agent.model.predict(T)
+#	       		time.sleep(10)
+			R = pull()
 			print "\n\nITERATION : ", i
- 	      		print P
+	      		print P
+#			print X
 #			print agent.model.evaluate(P, R, verbose=0)
 			print R
-			M = (X, P, R)
-#			print M
+			M = (X, R)
+			print M
+			with open(agent.memory, 'wb') as csvfile:
+				writer = csv.writer(csvfile, delimiter = ',')
+				writer.writerow(M)
 			agent.memory.append(M)
 		agent.learn()
 

@@ -17,6 +17,7 @@ from keras.optimizers import Adam
 from keras import backend as K
 from collections import deque
 import random
+from sklearn.model_selection import train_test_split
 
 HIDDEN_LAYERS = 3
 NEURAL_DENSITY = 64
@@ -29,7 +30,7 @@ class Agent():
 		self.output_size = output_size
 		self.learning_rate = LEARNING_RATE
 		self.model = self._build_model()
-		self.memory = deque(maxlen=DEQUE)
+		self.memory = './ticker_tape.csv'
 		self.target_model = self._build_model()
 		self.update_target_model()
 		self.gamma = 0.95
@@ -46,18 +47,33 @@ class Agent():
 		for i in range(HIDDEN_LAYERS):
 			model.add(Dense(NEURAL_DENSITY, activation='relu'))
 		model.add(Dense(self.output_size, activation='softmax'))
-		model.compile(loss=self._huber_loss, optimizer='adam', metrics=['accuracy'])
+		model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 		return model
 	def learn(self):
+		seed = 9
+		np.random.seed(seed)
 #		minibatch = random.sample(self.memory, batch_size)
-		for inputs, prediction, result in self.memory:
+		print self.memory
+		for inputs, results in self.memory:
+#			print "this", this			
 #			if done:
 #				target[0][action] = reward
 #			else:
 #				a = self.model.predict(next_state)[0]
 #				t = self.target_model.predict(next_state)[0]
 #				target[0][action] = reward + self.gamma * t[np.argmax(a)]
-			self.model.fit(inputs, result, epochs=1, verbose=0)
+#			print "\n", inputs
+#			X = np.array([inputs])
+#			print "\n", X
+#			print results
+#			Y = np.array([results])
+#			print Y
+			pass
+		print X		
+#		print Y = self.memory[0]
+		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
+		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=200, batch_size=5, verbose=0)
+#			self.model.fit(inputs, result, epochs=1, verbose=0)
 		if self.epsilon > self.epsilon_min:
 			self.epsilon *= self.epsilon_decay
 	def update_target_model(self):
