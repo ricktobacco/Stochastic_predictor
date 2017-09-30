@@ -48,14 +48,14 @@ class Agent():
 		for i in range(HIDDEN_LAYERS):
 			model.add(Dense(NEURAL_DENSITY, activation='relu'))
 		model.add(Dense(self.output_size, activation='softmax'))
-		model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+		model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 		return model
 	def learn(self):
 		seed = 9
 		np.random.seed(seed)
 		dataset = np.loadtxt(TAPE, delimiter=',')
-		X = []
-		Y = []
+#		X = []
+#		Y = []
 #		with open(TAPE) as fobj:
 #			for line in fobj:
 #			        row = line.split()
@@ -93,11 +93,11 @@ class Agent():
 		print "X : ", X		
 		print "Y : ", Y
 		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
-		X_train = X_train.reshape((1, 3))
-		X_text = X_test.reshape((1, 3))
-		Y_train = Y_train.reshape((1, 3))
-		Y_test = Y_test.reshape((1, 3))
-		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=200, batch_size=5, verbose=0)
+#		X_train = X_train.reshape((3, 1))
+#		X_text = X_test.reshape((3, 1))
+#		Y_train = Y_train.reshape((3, 1))
+#		Y_test = Y_test.reshape((3, 1))
+		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=200, batch_size=1, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
 		if self.epsilon > self.epsilon_min:
 			self.epsilon *= self.epsilon_decay

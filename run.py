@@ -19,7 +19,7 @@ import numpy as np
 import csv
 # api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 2
+EPOCHS = 6
 BATCH = 32
 
 # defining a params dict for the parameters to be sent to the API
