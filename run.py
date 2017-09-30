@@ -17,10 +17,9 @@ import time
 import sys
 import numpy as np
 import csv
-
 # api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 10
+EPOCHS = 2
 BATCH = 32
 
 # defining a params dict for the parameters to be sent to the API
@@ -52,7 +51,7 @@ def pull():
 def run(args):
 	agent = objects.Agent(3, 3)
 	while True:
-		with open(agent.memory, 'wb') as csvfile:	
+		with open(objects.TAPE, 'wb') as csvfile:	
 			writer = csv.writer(csvfile, delimiter = ',')
 			for i in range(EPOCHS):
 				X = pull()
@@ -65,13 +64,17 @@ def run(args):
 	      			print P
 #				print X
 #				print agent.model.evaluate(P, R, verbose=0)
-				print R
+				print np.asarray(R)
 #				print X + R
-				M = X + R
-				print M
+				M = []
+				for i in X:
+					M.append(i)
+				for j in R:
+					M.append(j)
+#				print M, "\n\n"
 				writer.writerow(M)
 #				agent.memory.append(M)
-			agent.learn()
+		agent.learn()
 
 if __name__ == "__main__":
     run(sys.argv)

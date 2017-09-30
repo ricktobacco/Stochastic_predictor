@@ -23,6 +23,7 @@ HIDDEN_LAYERS = 3
 NEURAL_DENSITY = 64
 LEARNING_RATE = 0.001
 DEQUE = 300
+TAPE = "tape.csv"
 
 class Agent():
 	def __init__(self, input_size, output_size):
@@ -52,8 +53,22 @@ class Agent():
 	def learn(self):
 		seed = 9
 		np.random.seed(seed)
-		dataset = np.loadtxt("ticker_tape.csv", delimiter=',')
-		print dataset
+		dataset = np.loadtxt(TAPE, delimiter=',')
+		X = []
+		Y = []
+#		with open(TAPE) as fobj:
+#			for line in fobj:
+#			        row = line.split()
+#        			X.append(np.array([row[0:3]]))
+#			        Y.append(np.array([row[3:]]))
+#		print data
+#		print target
+#			reader = csv.reader(csvfile, delimiter=',')
+#			for row in reader:
+#				X = list(row[i] for i in range(3))
+#				Y = list(row[i] for i in [3:])
+#		print X, Y
+#		print dataset
 #		print dataset[:]
 		X = dataset[:,0:3]
 		Y = dataset[:,3:]
@@ -75,9 +90,13 @@ class Agent():
 #			Y = np.array([results])
 #			print Y
 #			pass
-		print X		
-		print Y
+		print "X : ", X		
+		print "Y : ", Y
 		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
+		X_train = X_train.reshape((1, 3))
+		X_text = X_test.reshape((1, 3))
+		Y_train = Y_train.reshape((1, 3))
+		Y_test = Y_test.reshape((1, 3))
 		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=200, batch_size=5, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
 		if self.epsilon > self.epsilon_min:
