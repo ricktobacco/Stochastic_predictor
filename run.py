@@ -20,7 +20,7 @@ import csv
 import os
 # api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 300
+EPOCHS = 100
 BATCH = 32
 SAVE = "trained.h5"
 
@@ -61,9 +61,9 @@ def run(args):
 			for i in range(EPOCHS):
 				X = pull()
 				T = np.array([X])
-#				print X
+#				print
 				P = agent.model.predict(T)
-	       			
+	       			time.sleep(5)
 				R = pull()
 				print "\n\nITERATION : ", i
 	      			print P
