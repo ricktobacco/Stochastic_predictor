@@ -17,10 +17,12 @@ import time
 import sys
 import numpy as np
 import csv
+import os
 # api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 6
+EPOCHS = 300
 BATCH = 32
+SAVE = "trained.h5"
 
 # defining a params dict for the parameters to be sent to the API
 #PARAMS = {'address':ticker}
@@ -50,6 +52,9 @@ def pull():
 
 def run(args):
 	agent = objects.Agent(3, 3)
+	if os.path.isfile(SAVE):
+#		print "Loading ..."
+		agent.load(SAVE)
 	while True:
 		with open(objects.TAPE, 'wb') as csvfile:	
 			writer = csv.writer(csvfile, delimiter = ',')
@@ -58,7 +63,7 @@ def run(args):
 				T = np.array([X])
 #				print X
 				P = agent.model.predict(T)
-	       			time.sleep(10)
+	       			
 				R = pull()
 				print "\n\nITERATION : ", i
 	      			print P
@@ -75,6 +80,7 @@ def run(args):
 				writer.writerow(M)
 #				agent.memory.append(M)
 		agent.learn()
+		agent.save(SAVE)
 
 if __name__ == "__main__":
     run(sys.argv)

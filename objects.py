@@ -97,10 +97,9 @@ class Agent():
 #		X_text = X_test.reshape((3, 1))
 #		Y_train = Y_train.reshape((3, 1))
 #		Y_test = Y_test.reshape((3, 1))
-		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=200, batch_size=1, verbose=0)
+		self.model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=1, batch_size=5, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
-		if self.epsilon > self.epsilon_min:
-			self.epsilon *= self.epsilon_decay
+	
 	def update_target_model(self):
 		self.target_model.set_weights(self.model.get_weights())
 	def predict(self, X):
