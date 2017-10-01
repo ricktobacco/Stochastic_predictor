@@ -22,7 +22,6 @@ from sklearn.model_selection import train_test_split
 HIDDEN_LAYERS = 3
 NEURAL_DENSITY = 64
 LEARNING_RATE = 0.001
-DEQUE = 300
 TAPE = "tape.csv"
 
 class Agent():
@@ -31,7 +30,6 @@ class Agent():
 		self.output_size = output_size
 		self.learning_rate = LEARNING_RATE
 		self.model = self._build_model()
-		self.memory = "ticker_tape.csv"
 		self.target_model = self._build_model()
 		self.update_target_model()
 		self.gamma = 0.95
@@ -39,19 +37,16 @@ class Agent():
 		self.epsilon_min = 0.01
 		self.epsilon_decay = 0.99
 		self.learning_rate = 0.001
-	def _huber_loss(self, target, prediction):
-		error = prediction - target
-		return K.mean(K.sqrt(1 + K.square(error)) - 1, axis = -1)
 	def _build_model(self):
 		model = Sequential()
-		model.add(Dense(NEURAL_DENSITY, input_dim=self.input_size, activation='relu'))
+		model.add(Dense(NEURAL_DENSITY, input_dim=self.input_size, activation='selu'))
 		for i in range(HIDDEN_LAYERS):
-			model.add(Dense(NEURAL_DENSITY, activation='relu'))
-		model.add(Dense(self.output_size, activation='relu'))
-		model.compile(loss='mean_absolute_error', optimizer='adam', metrics=['accuracy'])
+			model.add(Dense(NEURAL_DENSITY, activation='selu'))
+		model.add(Dense(self.output_size, activation='selu'))
+		model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 		return model
 	def learn(self):
-		seed = 9
+		seed = 42
 		np.random.seed(seed)
 		dataset = np.loadtxt(TAPE, delimiter=',')
 #		X = []
@@ -92,7 +87,7 @@ class Agent():
 #			pass
 		print "X : ", X		
 		print "Y : ", Y
-		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
+		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.10, random_state=seed)
 #		X_train = X_train.reshape((3, 1))
 #		X_text = X_test.reshape((3, 1))
 #		Y_train = Y_train.reshape((3, 1))
