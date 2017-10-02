@@ -53,7 +53,6 @@ def pull():
 def run(args):
 	agent = objects.Agent(3, 3)
 	if os.path.isfile(SAVE):
-#		print "Loading ..."
 		agent.load(SAVE)
 	while True:
 		with open(objects.TAPE, 'wb') as csvfile:	
