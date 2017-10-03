@@ -18,7 +18,9 @@ import sys
 import numpy as np
 import csv
 import os
-# api-endpoint
+import matplotlib.pyplot as plt 
+import matplotlib.animation as animationa
+## api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
 EPOCHS = 15
 BATCH = 32
@@ -41,6 +43,8 @@ SAVE = "trained.h5"
 #		print each, memory
 #		agent.train(inputs, result, validation_data=(X_test, Y_test), epochs=200, batch_size=5, verbose=0)
 
+plt.ion()
+
 def pull():
 	r = requests.get(url = URL, params = {})
 	if r.status_code == requests.codes.ok:
@@ -53,6 +57,12 @@ def pull():
 	else:
 		time.sleep(10)
 
+def plot(data, time):
+#	plt.axis([0, 10, 0, 1])
+    	y = data
+    	plt.scatter(time, data)
+    	plt.pause(0.05)
+
 def run(args):
 	agent = objects.Agent(3, 3)
 	if os.path.isfile(SAVE):
@@ -60,24 +70,23 @@ def run(args):
 	while True:
 		with open(objects.TAPE, 'w') as csvfile:	
 			writer = csv.writer(csvfile, delimiter = ',')
-			for i in range(EPOCHS):
-				print("\n\nITERATION : ", i)
+			for t in range(EPOCHS):
+				print("\n\nITERATION : ", t)
 				X = pull()
 				T = np.array([X])
 #				print
 				P = list(agent.model.predict(T)[0])
+				localtime = time.asctime( time.localtime(time.time()) )
 				print(P)
 				time.sleep(15)
 				R = pull()
-#				print X
-#				print agent.model.evaluate(np.array([P]), np.array([R]), verbose=0)
 				print(R)
-#				print X + R
 				M = []
 				for i in X:
 					M.append(i)
 				for j in R:
 					M.append(j)
+#				plot(M, t)
 #				print(M, "\n\n")
 				writer.writerow(M)
 #				agent.memory.append(M)
