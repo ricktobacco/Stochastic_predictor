@@ -23,6 +23,7 @@ HIDDEN_LAYERS = 2
 NEURAL_DENSITY = 32
 LEARNING_RATE = 0.001
 TAPE = "tape.csv"
+BATCH = 5
 
 class Agent():
 	def __init__(self, input_size, output_size):
@@ -85,14 +86,14 @@ class Agent():
 #			Y = np.array([results])
 #			print Y
 #			pass
-		print "X : ", X		
-		print "Y : ", Y
-		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.10, random_state=seed)
+		print("X : ", X)
+		print("Y : ", Y)
+		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
 #		X_train = X_train.reshape((3, 1))
 #		X_text = X_test.reshape((3, 1))
 #		Y_train = Y_train.reshape((3, 1))
 #		Y_test = Y_test.reshape((3, 1))
-		self.model.fit(X_train, Y_train, validation_data = (X_test, Y_test), epochs=1, batch_size=5, verbose=0)
+		self.model.fit(X_train, Y_train, validation_data = (X_test, Y_test), epochs=100, batch_size=BATCH, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
 	
 	def update_target_model(self):

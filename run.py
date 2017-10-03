@@ -20,7 +20,7 @@ import csv
 import os
 # api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 42
+EPOCHS = 15
 BATCH = 32
 SAVE = "trained.h5"
 
@@ -43,39 +43,42 @@ SAVE = "trained.h5"
 
 def pull():
 	r = requests.get(url = URL, params = {})
-	tape = r.json()
-	X = []
-	for each, coin in tape.items():
-		X.append(coin)
+	if r.status_code == requests.codes.ok:
+		tape = r.json()
+		X = []
+		for each, coin in tape.items():
+			X.append(coin)
 #	print X
-	return X
+		return X
+	else:
+		time.sleep(10)
 
 def run(args):
 	agent = objects.Agent(3, 3)
 	if os.path.isfile(SAVE):
 		agent.load(SAVE)
 	while True:
-		with open(objects.TAPE, 'wb') as csvfile:	
+		with open(objects.TAPE, 'w') as csvfile:	
 			writer = csv.writer(csvfile, delimiter = ',')
 			for i in range(EPOCHS):
-				print "\n\nITERATION : ", i
+				print("\n\nITERATION : ", i)
 				X = pull()
 				T = np.array([X])
 #				print
 				P = list(agent.model.predict(T)[0])
-	      			print P
-	       			time.sleep(5)
+				print(P)
+				time.sleep(15)
 				R = pull()
 #				print X
 #				print agent.model.evaluate(np.array([P]), np.array([R]), verbose=0)
-				print R
+				print(R)
 #				print X + R
 				M = []
 				for i in X:
 					M.append(i)
 				for j in R:
 					M.append(j)
-#				print M, "\n\n"
+#				print(M, "\n\n")
 				writer.writerow(M)
 #				agent.memory.append(M)
 		agent.learn()
