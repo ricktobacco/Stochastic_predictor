@@ -45,14 +45,16 @@ SAVE = "trained.h5"
 
 plt.ion()
 
-def pull():
+def pull(n):
 	r = requests.get(url = URL, params = {})
 	if r.status_code == requests.codes.ok:
 		tape = r.json()
 		X = []
 		for each, coin in tape.items():
-			#if each == 'BTC'
-			X.append(coin)
+			if n and each == 'BTC': 
+				X.append(coin)
+			elif n == 0:
+				X.append(coin)
 #	print X
 		return X
 	else:
@@ -65,7 +67,7 @@ def plot(data, time):
     	plt.pause(0.05)
 
 def run(args):
-	agent = objects.Agent(3, 3)
+	agent = objects.Agent(3, 1)
 	if os.path.isfile(SAVE):
 		agent.load(SAVE)
 	while True:
@@ -73,14 +75,14 @@ def run(args):
 			writer = csv.writer(csvfile, delimiter = ',')
 			for t in range(EPOCHS):
 				print("\n\nITERATION : ", t)
-				X = pull()
+				X = pull(0)
 				T = np.array([X])
 #				print
 				P = list(agent.model.predict(T)[0])
 				localtime = time.asctime( time.localtime(time.time()) )
 				print(P)
 				time.sleep(12)
-				R = pull()
+				R = pull(1)
 				print(R)
 				M = []
 				for i in X:

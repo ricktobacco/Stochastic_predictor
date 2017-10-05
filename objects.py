@@ -15,6 +15,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
 from keras import backend as K
+from keras import metrics
 from collections import deque
 import random
 from sklearn.model_selection import train_test_split
@@ -44,7 +45,7 @@ class Agent():
 		for i in range(HIDDEN_LAYERS):
 			model.add(Dense(NEURAL_DENSITY, activation='linear'))
 		model.add(Dense(self.output_size, activation='linear'))
-		model.compile(loss='mean_squared_logarithmic_error', optimizer='adam', metrics=['accuracy'])
+		model.compile(loss='mean_absolute_error', optimizer='nadam', metrics=[metrics.mae, metrics.binary_accuracy])
 		return model
 	def learn(self):
 		seed = 42
