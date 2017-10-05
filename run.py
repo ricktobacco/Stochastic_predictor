@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animationa
 ## api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 15
+EPOCHS = 12
 BATCH = 32
 SAVE = "trained.h5"
 
@@ -51,11 +51,12 @@ def pull():
 		tape = r.json()
 		X = []
 		for each, coin in tape.items():
+			#if each == 'BTC'
 			X.append(coin)
 #	print X
 		return X
 	else:
-		time.sleep(10)
+		time.sleep(12)
 
 def plot(data, time):
 #	plt.axis([0, 10, 0, 1])
@@ -78,7 +79,7 @@ def run(args):
 				P = list(agent.model.predict(T)[0])
 				localtime = time.asctime( time.localtime(time.time()) )
 				print(P)
-				time.sleep(15)
+				time.sleep(12)
 				R = pull()
 				print(R)
 				M = []

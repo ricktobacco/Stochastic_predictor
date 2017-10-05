@@ -44,7 +44,7 @@ class Agent():
 		for i in range(HIDDEN_LAYERS):
 			model.add(Dense(NEURAL_DENSITY, activation='linear'))
 		model.add(Dense(self.output_size, activation='linear'))
-		model.compile(loss='mean_absolute_error', optimizer='adam', metrics=['accuracy'])
+		model.compile(loss='mean_squared_logarithmic_error', optimizer='adam', metrics=['accuracy'])
 		return model
 	def learn(self):
 		seed = 42
@@ -93,7 +93,7 @@ class Agent():
 #		X_text = X_test.reshape((3, 1))
 #		Y_train = Y_train.reshape((3, 1))
 #		Y_test = Y_test.reshape((3, 1))
-		self.model.fit(X_train, Y_train, validation_data = (X_test, Y_test), epochs=100, batch_size=BATCH, verbose=0)
+		self.model.fit(X_train, Y_train, validation_data = (X_test, Y_test), epochs=10, batch_size=250, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
 	
 	def update_target_model(self):
