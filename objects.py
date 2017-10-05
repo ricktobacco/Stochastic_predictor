@@ -45,7 +45,7 @@ class Agent():
 		for i in range(HIDDEN_LAYERS):
 			model.add(Dense(NEURAL_DENSITY, activation='linear'))
 		model.add(Dense(self.output_size, activation='linear'))
-		model.compile(loss='mean_absolute_error', optimizer='nadam', metrics=[metrics.mae, metrics.binary_accuracy])
+		model.compile(loss='mean_absolute_error', optimizer='adamax', metrics=[metrics.mae, metrics.binary_accuracy])
 		return model
 	def learn(self):
 		seed = 42
