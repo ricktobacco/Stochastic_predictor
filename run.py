@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animationa
 ## api-endpoint
 URL = "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR"
-EPOCHS = 12
+EPOCHS = 16
 BATCH = 32
 SAVE = "trained.h5"
 
@@ -46,8 +46,9 @@ SAVE = "trained.h5"
 plt.ion()
 
 def pull(n):
-	r = requests.get(url = URL, params = {})
-	if r.status_code == requests.codes.ok:
+	try:
+		r = requests.get(url = URL, params = {})
+#	if r.status_code == requests.codes.ok:
 		tape = r.json()
 		X = []
 		for each, coin in tape.items():
@@ -55,10 +56,10 @@ def pull(n):
 				X.append(coin)
 			elif n == 0:
 				X.append(coin)
-#	print X
 		return X
-	else:
-		time.sleep(12)
+	except:
+		time.sleep(15)
+		return(pull(n))
 
 def plot(data, time):
 #	plt.axis([0, 10, 0, 1])
@@ -67,32 +68,39 @@ def plot(data, time):
     	plt.pause(0.05)
 
 def run(args):
-	agent = objects.Agent(3, 1)
+	agent = objects.Agent(45, 1)
 	if os.path.isfile(SAVE):
 		agent.load(SAVE)
+	M = []
 	while True:
 		with open(objects.TAPE, 'w') as csvfile:	
 			writer = csv.writer(csvfile, delimiter = ',')
-			for t in range(EPOCHS):
-				print("\n\nITERATION : ", t)
-				X = pull(0)
-				T = np.array([X])
-#				print
-				P = list(agent.model.predict(T)[0])
-				localtime = time.asctime( time.localtime(time.time()) )
-				print(P)
-				time.sleep(12)
-				R = pull(1)
-				print(R)
-				M = []
-				for i in X:
-					M.append(i)
-				for j in R:
-					M.append(j)
-#				plot(M, t)
-#				print(M, "\n\n")
-				writer.writerow(M)
-#				agent.memory.append(M)
+			print("... collecting ...")
+			for ok in range(2):
+				for t in range(EPOCHS):
+					print("\n\nITERATION : ", t)
+					X = pull(0)
+#					print
+#					localtime = time.asctime(time.localtime(time.time()))
+#					print("")
+					print(len(M))
+					if len(M) == 45:
+						print("... predicting ...")
+#						M.pop(0)
+#						M.append()
+						T = np.array([M])
+						P = list(agent.model.predict(T)[0])
+						print("prediction : ", P[0])
+						time.sleep(30)
+						R = pull(1)
+						print("result : ", R[0])
+						M.append(R[0])
+						writer.writerow(M)
+						M.pop(0)
+					else:
+						for i in X:
+							M.append(i)		
+#					agent.memory.append(M)
 		agent.learn()
 		agent.save(SAVE)
 

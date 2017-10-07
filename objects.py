@@ -19,6 +19,7 @@ from keras import metrics
 from collections import deque
 import random
 from sklearn.model_selection import train_test_split
+import run
 
 HIDDEN_LAYERS = 2
 NEURAL_DENSITY = 32
@@ -65,10 +66,10 @@ class Agent():
 #				X = list(row[i] for i in range(3))
 #				Y = list(row[i] for i in [3:])
 #		print X, Y
-#		print dataset
+#		print(dataset)
 #		print dataset[:]
-		X = dataset[:,0:3]
-		Y = dataset[:,3:]
+		X = dataset[:,0:45]
+		Y = dataset[:,45:]
 #		sys.exit(1)
 #		minibatch = random.sample(self.memory, batch_size)
 #		print self.memory
@@ -87,14 +88,16 @@ class Agent():
 #			Y = np.array([results])
 #			print Y
 #			pass
-		print("X : ", X)
-		print("Y : ", Y)
+#		print("X : ", X)
+#		print("Y : ", Y)
 		(X_train, X_test, Y_train, Y_test) = train_test_split(X, Y, test_size=0.33, random_state=seed)
+#		X = np.array([X])
+#		Y = np.array([Y])
 #		X_train = X_train.reshape((3, 1))
 #		X_text = X_test.reshape((3, 1))
 #		Y_train = Y_train.reshape((3, 1))
 #		Y_test = Y_test.reshape((3, 1))
-		self.model.fit(X_train, Y_train, validation_data = (X_test, Y_test), epochs=10, batch_size=250, verbose=0)
+		self.model.fit(X_train, Y_train, validation_data = (X_test, Y_test), epochs=10, batch_size=5, verbose=0)
 #			self.model.fit(inputs, result, epochs=1, verbose=0)
 	
 	def update_target_model(self):
