@@ -78,12 +78,12 @@ def run(args):
 			print("... collecting ...")
 			for ok in range(2):
 				for t in range(EPOCHS):
-					print("\n\nITERATION : ", t)
+#					print("\n\nITERATION : ", t)
 					X = pull(0)
 #					print
 #					localtime = time.asctime(time.localtime(time.time()))
 #					print("")
-					print(len(M))
+#					print(len(M))
 					if len(M) == 45:
 						print("... predicting ...")
 #						M.pop(0)
@@ -93,7 +93,7 @@ def run(args):
 						print("prediction : ", P[0])
 						time.sleep(30)
 						R = pull(1)
-						print("result : ", R[0])
+						print("result     : ", R[0])
 						M.append(R[0])
 						writer.writerow(M)
 						M.pop(0)
